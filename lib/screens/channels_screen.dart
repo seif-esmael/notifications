@@ -45,7 +45,8 @@ class _ChannelsScreenState extends State<ChannelsScreen> {
       if (snapshot.exists) {
         userSubscriptions = Map<String, bool>.from(snapshot.value as Map);
       }
-      final firestoreChannels = await ChannelServices.getChannels().first;
+      final firestoreChannels = await ChannelServices.getChannelsRealtime().first;
+      print(firestoreChannels);
 
       setState(() {
         _channels.clear();
@@ -55,7 +56,6 @@ class _ChannelsScreenState extends State<ChannelsScreen> {
           });
         }
 
-        // Add Firestore channels
         for (String firestoreChannel in firestoreChannels) {
           _channels.add({
             firestoreChannel: userSubscriptions[firestoreChannel] ?? false,
@@ -87,6 +87,7 @@ class _ChannelsScreenState extends State<ChannelsScreen> {
       channelImages[channelName] = 'images/default.jpg';
     });
     ChannelServices.addChannelFireStore(channelName);
+    ChannelServices.addChannelRealtime(channelName);
   }
 
   Future<void> _showConfirmationDialog(
@@ -120,6 +121,7 @@ class _ChannelsScreenState extends State<ChannelsScreen> {
       setState(() {
         _channels.removeWhere((channel) => channel.keys.first == channelName);
         ChannelServices.deleteChannelFireStore(channelName);
+        ChannelServices.deleteChannelRealtime(channelName);
       });
     }
   }
@@ -210,9 +212,11 @@ class _ChannelsScreenState extends State<ChannelsScreen> {
                           });
 
                           if (isSubscribed) {
-                            SubscriptionServices.unsubscribeFromChannelRealTimeDB(channelName);
+                            SubscriptionServices
+                                .unsubscribeFromChannelRealTimeDB(channelName);
                           } else {
-                            SubscriptionServices.subscribeToChannelRealTimeDB(channelName);
+                            SubscriptionServices.subscribeToChannelRealTimeDB(
+                                channelName);
                           }
                         },
                         style: ElevatedButton.styleFrom(

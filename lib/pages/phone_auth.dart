@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:notifications/services/analytics_service.dart';
 import 'package:notifications/services/auth.dart';
 import 'package:notifications/customs/custom_textfield.dart';
 import 'package:notifications/customs/custom_button.dart';

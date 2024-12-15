@@ -118,6 +118,7 @@ class _LoginPageState extends State<LoginPage> {
 
                   // Email field
                   CustomTextField(
+                    key: const Key('emailField'),
                     controller: _emailController,
                     hint: 'Email Address',
                     obsecuretext: false,
@@ -126,6 +127,7 @@ class _LoginPageState extends State<LoginPage> {
 
                   // Password field
                   CustomTextField(
+                    key: const Key('passwordField'),
                     controller: _passwordController,
                     hint: 'Password',
                     obsecuretext: !isPasswordVisible,
@@ -146,6 +148,7 @@ class _LoginPageState extends State<LoginPage> {
 
                   // Sign In button
                   CustomButton(
+                    key: const Key('signInButton'),
                     content: "Sign In",
                     onTap: _loginWithEmailAndPassword,
                   ),

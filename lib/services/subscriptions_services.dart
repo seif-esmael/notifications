@@ -8,6 +8,7 @@ class SubscriptionServices {
   static List<String> subscribed_channels = [];
 
   static Future<void> subscribeToChannelRealTimeDB(String channel) async {
+    print(subscribed_channels);
     if (!subscribed_channels.contains(channel)) {
       String? uid = await UserServices.getUserId();
       String userName = await UserServices.getUserName();
@@ -17,9 +18,9 @@ class SubscriptionServices {
         channel: true,
       });
 
+      subscribed_channels.add(channel);
       await FirebaseMessaging.instance.subscribeToTopic(channel);
       await AnalyticsServices.subscribe(channel, userName);
-      subscribed_channels.add(channel);
       print('Subscribed to $channel');
     } else {
       print('Already subscribed to $channel');
@@ -27,6 +28,7 @@ class SubscriptionServices {
   }
 
   static Future<void> unsubscribeFromChannelRealTimeDB(String channel) async {
+    print(subscribed_channels);
     if (subscribed_channels.contains(channel)) {
       String? uid = await UserServices.getUserId();
       String userName = await UserServices.getUserName();

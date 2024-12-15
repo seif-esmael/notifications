@@ -25,6 +25,7 @@ class ChannelServices {
         .collection('channels')
         .snapshots()
         .map((snapshot) {
+        print("Firestore snapshot received: ${snapshot.docs.length} channels");
       return snapshot.docs.map((doc) => doc.id).toList();
     });
   }
@@ -61,5 +62,30 @@ class ChannelServices {
     } catch (e) {
       print('Error deleting channel from Realtime Database: $e');
     }
+  }
+
+  static Future<void> addChannelRealtime(String channelId) async {
+    try {
+      DatabaseReference channelRef = FirebaseDatabase.instance.ref('channels/$channelId');
+      await channelRef.set({
+        'name': channelId,
+        'createdAt': ServerValue.timestamp,
+      });
+      print('Channel $channelId added to Realtime Database');
+    } catch (e) {
+      print('Error adding channel to Realtime Database: $e');
+    }
+  }
+
+  // Get channels from Realtime Database
+  static Stream<List<String>> getChannelsRealtime() {
+    return FirebaseDatabase.instance.ref('channels').onValue.map((event) {
+      final channelsMap = event.snapshot.value as Map<dynamic, dynamic>?;
+      if (channelsMap != null) {
+        return channelsMap.keys.cast<String>().toList();
+      } else {
+        return [];
+      }
+    });
   }
 }
